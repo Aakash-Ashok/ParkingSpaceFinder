@@ -1,0 +1,7 @@
+
+
+GET /bike_park_zone/: Retrieve a list of all BikeParkZone instances.
+POST /bike_park_zone/: Create a new BikeParkZone instance.
+GET /bike_park_zone/<pk>/: Retrieve a specific BikeParkZone instance.
+PUT /bike_park_zone/<pk>/: Update a specific BikeParkZone instance.
+DELETE /bike_park_zone/<pk>/: Delete a specific BikeParkZone instance.
