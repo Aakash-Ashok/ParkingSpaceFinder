@@ -6,7 +6,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from api.permissions import *
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication,BasicAuthentication
+from django.views.decorators.csrf import csrf_protect
+from rest_framework.decorators import action
 # Create your views here.
 
 class UserRegistration(APIView):
@@ -28,20 +30,23 @@ class AdminRegistration(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-    
 
 class BikeParkZoneViewSet(viewsets.ModelViewSet):
     queryset = BikeParkZone.objects.all()
     serializer_class = BikeParkZoneSerializer
-    authentication_classes=[TokenAuthentication]
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
     permission_classes = [AdminPermission, IsOwner]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user.id)
+        serializer.save(owner=self.request.user)
 
     def get_queryset(self):
         user = self.request.user
         return BikeParkZone.objects.filter(owner=user)
+
+    # @action(detail=True, methods=['get'])
+    # def custom_action(self, request, pk=None):
+    #     return Response({'message': 'Custom action executed'})
 
 
 
