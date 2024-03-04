@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework.authtoken',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,11 @@ REST_FRAMEWORK = {
     ],
 }
 
+SWAGGER_SETTINGS = {'SECURITY_DEFINITIONS':{
+                                                    'Bearer': {'type': 'apiKey', 
+                                                    'name': 'Authorization', 'in': 'header'} 
+                                            }
+                    }
 
 ROOT_URLCONF = 'Parking_Space_Finder.urls'
 

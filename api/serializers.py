@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from datetime import datetime
 from api.models import *
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth import authenticate
+from django.core.validators import RegexValidator
 
 class CustomDateFormatField(serializers.DateField):
     def to_internal_value(self, value):
@@ -48,3 +47,65 @@ class HeavyParkZoneSerializer(serializers.ModelSerializer):
     class Meta:
         model=BikeParkZone
         exclude=["owner",] 
+
+
+class BikeReservationSerializer(serializers.ModelSerializer):
+    start_time = serializers.DateTimeField()
+    finish_time = serializers.DateTimeField()
+    parking_zone = serializers.IntegerField()
+    plate_number = serializers.CharField(validators=[RegexValidator(
+        regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
+        message='Plate number must be in the format KXX123X',
+        code='invalid_plate_number'
+    )])
+
+    phone_number = serializers.CharField(validators=[RegexValidator(
+        regex=r'^[0-9]+$',
+        message='Phone number must contain only digits',
+        code='invalid_phone_number'
+    )])
+
+    class Meta:
+        model = BikeReservation
+        exclude = ['ticket_code', 'customer', 'checked_out']
+
+
+class CarReservationSerializer(serializers.ModelSerializer):
+    start_time = serializers.DateTimeField()
+    finish_time = serializers.DateTimeField()
+    parking_zone = serializers.IntegerField()
+    plate_number = serializers.CharField(validators=[RegexValidator(
+        regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
+        message='Plate number must be in the format KXX123X',
+        code='invalid_plate_number'
+    )])
+
+    phone_number = serializers.CharField(validators=[RegexValidator(
+        regex=r'^[0-9]+$',
+        message='Phone number must contain only digits',
+        code='invalid_phone_number'
+    )])
+
+    class Meta:
+        model = CarReservation
+        exclude = ['ticket_code', 'customer', 'checked_out']
+
+class HeavyReservationSerializer(serializers.ModelSerializer):
+    start_time = serializers.DateTimeField()
+    finish_time = serializers.DateTimeField()
+    parking_zone = serializers.IntegerField()
+    plate_number = serializers.CharField(validators=[RegexValidator(
+        regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
+        message='Plate number must be in the format KXX123X',
+        code='invalid_plate_number'
+    )])
+
+    phone_number = serializers.CharField(validators=[RegexValidator(
+        regex=r'^[0-9]+$',
+        message='Phone number must contain only digits',
+        code='invalid_phone_number'
+    )])
+
+    class Meta:
+        model = HeavyReservation
+        exclude = ['ticket_code', 'customer', 'checked_out']

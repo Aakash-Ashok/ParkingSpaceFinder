@@ -39,13 +39,13 @@ class BikeParkZone(models.Model):
         on_delete=models.CASCADE
     )
 
-    total_slot = models.PositiveIntegerField()
+    total_slots = models.PositiveIntegerField()
 
-    vacant_slot = models.PositiveIntegerField(
+    vacant_slots = models.PositiveIntegerField(
         default=0
     )
 
-    occupied_slot = models.PositiveIntegerField(
+    occupied_slots = models.PositiveIntegerField(
         default=0
     )
 
@@ -68,13 +68,13 @@ class CarParkZone(models.Model):
         on_delete=models.CASCADE
     )
 
-    total_slot = models.PositiveIntegerField()
+    total_slots = models.PositiveIntegerField()
 
-    vacant_slot = models.PositiveIntegerField(
+    vacant_slots = models.PositiveIntegerField(
         default=0
     )
 
-    occupied_slot = models.PositiveIntegerField(
+    occupied_slots = models.PositiveIntegerField(
         default=0
     )
 
@@ -98,13 +98,13 @@ class HeavyParkZone(models.Model):
         on_delete=models.CASCADE
     )
 
-    total_slot = models.PositiveIntegerField()
+    total_slots = models.PositiveIntegerField()
 
-    vacant_slot = models.PositiveIntegerField(
+    vacant_slots = models.PositiveIntegerField(
         default=0
     )
 
-    occupied_slot = models.PositiveIntegerField(
+    occupied_slots = models.PositiveIntegerField(
         default=0
     )
 
@@ -121,8 +121,8 @@ class HeavyParkZone(models.Model):
 class BikeReservation(models.Model):
     ticket_code = models.CharField(max_length=6, blank=True, null=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    finish_time = models.TimeField()
+    start_time = models.DateTimeField()
+    finish_time = models.DateTimeField()
     parking_zone = models.ForeignKey(BikeParkZone, on_delete=models.CASCADE)
     plate_number = models.CharField(max_length=10)
     phone_number = models.CharField(max_length=16)
