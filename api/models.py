@@ -128,6 +128,7 @@ class BikeReservation(models.Model):
     phone_number = models.CharField(max_length=16)
     checked_out = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
     class Meta:
         ordering = ['-created_on']
@@ -146,6 +147,7 @@ class CarReservation(models.Model):
     phone_number = models.CharField(max_length=16)
     checked_out = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
     class Meta:
         ordering = ['-created_on']
@@ -164,6 +166,7 @@ class HeavyReservation(models.Model):
     phone_number = models.CharField(max_length=16)
     checked_out = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
     class Meta:
         ordering = ['-created_on']

@@ -9,7 +9,8 @@ from api.permissions import *
 from rest_framework.authentication import TokenAuthentication,BasicAuthentication
 import random
 import string
-from django.utils import timezone
+from datetime import timedelta
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
@@ -82,8 +83,9 @@ def create_ticket_code():
 
 
 class BikeReservationView(APIView):
-    authentication_classes = [BasicAuthentication,TokenAuthentication]
-    permission_classes=[permissions.IsAuthenticated]
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         try:
             user_reservation = BikeReservation.objects.get(customer=request.user, checked_out=False)
@@ -103,28 +105,31 @@ class BikeReservationView(APIView):
         if serializer.is_valid():
             start_time = serializer.validated_data['start_time']
             end_time = serializer.validated_data['finish_time']
-            parking_zone = serializer.validated_data['parking_zone']
+            parking_zone_id = serializer.validated_data['parking_zone']
 
             if start_time >= end_time:
                 return Response({'message': 'End time must be after start time'}, status=status.HTTP_400_BAD_REQUEST)
 
-            parkingzone = get_object_or_404(BikeParkZone, id=parking_zone)
-            if parkingzone.vacant_slots == 0:
+            parking_zone = get_object_or_404(BikeParkZone, id=parking_zone_id)
+            if parking_zone.vacant_slots == 0:
                 return Response({'message': 'Parking Zone Full!'}, status=status.HTTP_400_BAD_REQUEST)
 
             ticket_code = create_ticket_code()
             while BikeReservation.objects.filter(ticket_code=ticket_code).exists():
                 ticket_code = create_ticket_code()
 
-            reservation = serializer.save(customer=request.user, parking_zone=parkingzone, ticket_code=ticket_code)
-            parkingzone.occupied_slots += 1
-            parkingzone.vacant_slots = parkingzone.total_slots - parkingzone.occupied_slots
-            parkingzone.save()
+            total_hours = (end_time - start_time).total_seconds() / 3600
+            total_price = total_hours * float(parking_zone.price)
 
-            return Response({'message': 'Successfully Booked'}, status=status.HTTP_201_CREATED)
-        
+            with transaction.atomic():
+                reservation = serializer.save(customer=request.user, parking_zone=parking_zone, ticket_code=ticket_code, total_price=total_price)
+                parking_zone.occupied_slots += 1
+                parking_zone.vacant_slots = parking_zone.total_slots - parking_zone.occupied_slots
+                parking_zone.save()
+
+            return Response({'message': 'Successfully Booked', 'total_price': total_price}, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
     def delete(self, request):
         try:
             user_reservation = BikeReservation.objects.get(customer=request.user, checked_out=False)
