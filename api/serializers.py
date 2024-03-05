@@ -109,3 +109,15 @@ class HeavyReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = HeavyReservation
         exclude = ['ticket_code', 'customer', 'checked_out']
+
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data.get('new_password') != data.get('confirm_password'):
+            raise serializers.ValidationError("The new passwords do not match.")
+        return data

@@ -420,3 +420,17 @@ class HeavyCheckOutView(APIView):
                 return Response({'message': f'No Parking reservation exists for {request.user}'}, status=status.HTTP_404_NOT_FOUND)
         except ObjectDoesNotExist:
             return Response({'message': f'No Parking reservation exists for {request.user}'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class ChangePasswordView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            if not request.user.check_password(serializer.data.get('old_password')):
+                return Response({'old_password': ['Wrong password.']}, status=status.HTTP_400_BAD_REQUEST)
+            request.user.set_password(serializer.data.get('new_password'))
+            request.user.save()
+            return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

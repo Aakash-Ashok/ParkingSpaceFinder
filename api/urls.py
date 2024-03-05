@@ -47,6 +47,7 @@ urlpatterns = [
     path('bike/checkout/', BikeCheckOutView.as_view(), name='bike-checkout'),
     path('car/checkout/', CarCheckOutView.as_view(), name='car-checkout'),
     path('heavy/checkout/', HeavyCheckOutView.as_view(), name='heavy-checkout'),
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('',include(router.urls))
 ]
 
