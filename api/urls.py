@@ -38,9 +38,15 @@ urlpatterns = [
     path('bike/reserve/',BikeReservationView.as_view(),name='bike-reservation'),
     path('car/reserve/',CarReservationView.as_view(),name='car-reservation'),
     path('heavy/reserve/',HeavyReservationView.as_view(),name='heavy-reservation'),
-    path('search/bike',BikeParkingZoneSearchView.as_view(),name='search-bike'),
-    path('search/car',CarParkingZoneSearchView.as_view(),name='search-car'),
-    path('search/heavy',HeavyParkingZoneSearchView.as_view(),name='search-heavy'),
+    path('search/bike/',BikeParkingZoneSearchView.as_view(),name='search-bike'),
+    path('search/car/',CarParkingZoneSearchView.as_view(),name='search-car'),
+    path('search/heavy/',HeavyParkingZoneSearchView.as_view(),name='search-heavy'),
+    path('bike/ticket/',BikeTicketPdfView.as_view(),name='bike-ticket'),
+    path('car/ticket/',CarTicketPdfView.as_view(),name='car-ticket'),
+    path('heavy/ticket/',HeavyTicketPdfView.as_view(),name='heavy-ticket'),
+    path('bike/checkout/', BikeCheckOutView.as_view(), name='bike-checkout'),
+    path('car/checkout/', CarCheckOutView.as_view(), name='car-checkout'),
+    path('heavy/checkout/', HeavyCheckOutView.as_view(), name='heavy-checkout'),
     path('',include(router.urls))
 ]
 
