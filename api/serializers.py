@@ -33,32 +33,36 @@ class UserSerializers(serializers.ModelSerializer):
         return user
     
 
-class BikeParkZoneSerializer(serializers.ModelSerializer):
+class ParkZoneSerializer(serializers.ModelSerializer):
+    VEHICLE_CHOICES = (
+        ('bike', 'Bike'),
+        ('car', 'Car'),
+        ('heavy', 'Heavy Vehicle')
+    )
+
+    vehicle_type = serializers.ChoiceField(choices=VEHICLE_CHOICES)
+
     class Meta:
-        model=BikeParkZone
-        exclude=["owner",]
-
-class CarParkZoneSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=CarParkZone
-        exclude=["owner",]
-
-class HeavyParkZoneSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=HeavyParkZone
-        exclude=["owner",] 
+        model = ParkZone
+        exclude = ["owner",]
 
 
-class BikeReservationSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField()
-    finish_time = serializers.DateTimeField()
-    parking_zone = serializers.IntegerField()
+class ReservationSerializer(serializers.ModelSerializer):
+    VEHICLE_CHOICES = (
+        ('bike', 'Bike'),
+        ('car', 'Car'),
+        ('heavy', 'Heavy Vehicle')
+    )
+
+    vehicle_type = serializers.ChoiceField(choices=VEHICLE_CHOICES)
+    start_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    finish_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    parking_zone = serializers.PrimaryKeyRelatedField(queryset=ParkZone.objects.all())
     plate_number = serializers.CharField(validators=[RegexValidator(
         regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
         message='Plate number must be in the format KXX123X',
         code='invalid_plate_number'
     )])
-
     phone_number = serializers.CharField(validators=[RegexValidator(
         regex=r'^[0-9]+$',
         message='Phone number must contain only digits',
@@ -66,51 +70,8 @@ class BikeReservationSerializer(serializers.ModelSerializer):
     )])
 
     class Meta:
-        model = BikeReservation
+        model = Reservation
         exclude = ['ticket_code', 'customer', 'checked_out']
-
-
-class CarReservationSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField()
-    finish_time = serializers.DateTimeField()
-    parking_zone = serializers.IntegerField()
-    plate_number = serializers.CharField(validators=[RegexValidator(
-        regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
-        message='Plate number must be in the format KXX123X',
-        code='invalid_plate_number'
-    )])
-
-    phone_number = serializers.CharField(validators=[RegexValidator(
-        regex=r'^[0-9]+$',
-        message='Phone number must contain only digits',
-        code='invalid_phone_number'
-    )])
-
-    class Meta:
-        model = CarReservation
-        exclude = ['ticket_code', 'customer', 'checked_out']
-
-class HeavyReservationSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField()
-    finish_time = serializers.DateTimeField()
-    parking_zone = serializers.IntegerField()
-    plate_number = serializers.CharField(validators=[RegexValidator(
-        regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
-        message='Plate number must be in the format KXX123X',
-        code='invalid_plate_number'
-    )])
-
-    phone_number = serializers.CharField(validators=[RegexValidator(
-        regex=r'^[0-9]+$',
-        message='Phone number must contain only digits',
-        code='invalid_phone_number'
-    )])
-
-    class Meta:
-        model = HeavyReservation
-        exclude = ['ticket_code', 'customer', 'checked_out']
-
-
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -121,3 +82,8 @@ class ChangePasswordSerializer(serializers.Serializer):
         if data.get('new_password') != data.get('confirm_password'):
             raise serializers.ValidationError("The new passwords do not match.")
         return data
+    
+class ParkZoneSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParkZone
+        fields = ['name','price','location', 'vehicle_type']
