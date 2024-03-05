@@ -30,92 +30,40 @@ class User(AbstractUser):
 
 
 class BikeParkZone(models.Model):
-    name = models.CharField(
-        max_length=100
-    )
-
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     total_slots = models.PositiveIntegerField()
+    vacant_slots = models.PositiveIntegerField(default=0)
+    occupied_slots = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    location = models.CharField(max_length=100)
 
-    vacant_slots = models.PositiveIntegerField(
-        default=0
-    )
-
-    occupied_slots = models.PositiveIntegerField(
-        default=0
-    )
-
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
-    location = models.CharField(
-        max_length=100
-    )
-
+    def __str__(self):
+        return self.name
 
 class CarParkZone(models.Model):
-    name = models.CharField(
-        max_length=100
-    )
-
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     total_slots = models.PositiveIntegerField()
+    vacant_slots = models.PositiveIntegerField(default=0)
+    occupied_slots = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    location = models.CharField(max_length=100)
 
-    vacant_slots = models.PositiveIntegerField(
-        default=0
-    )
-
-    occupied_slots = models.PositiveIntegerField(
-        default=0
-    )
-
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
-
-    location = models.CharField(
-        max_length=100
-    )
-
+    def __str__(self):
+        return self.name
 
 class HeavyParkZone(models.Model):
-    name = models.CharField(
-        max_length=100
-    )
-
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     total_slots = models.PositiveIntegerField()
+    vacant_slots = models.PositiveIntegerField(default=0)
+    occupied_slots = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    location = models.CharField(max_length=100)
 
-    vacant_slots = models.PositiveIntegerField(
-        default=0
-    )
-
-    occupied_slots = models.PositiveIntegerField(
-        default=0
-    )
-
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
-
-    location = models.CharField(
-        max_length=100
-    )
+    def __str__(self):
+        return self.name
 
 
 class BikeReservation(models.Model):
@@ -140,8 +88,8 @@ class BikeReservation(models.Model):
 class CarReservation(models.Model):
     ticket_code = models.CharField(max_length=6, blank=True, null=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    finish_time = models.TimeField()
+    start_time = models.DateTimeField()
+    finish_time = models.DateTimeField()
     parking_zone = models.ForeignKey(CarParkZone, on_delete=models.CASCADE)
     plate_number = models.CharField(max_length=10)
     phone_number = models.CharField(max_length=16)
@@ -159,9 +107,9 @@ class CarReservation(models.Model):
 class HeavyReservation(models.Model):
     ticket_code = models.CharField(max_length=6, blank=True, null=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    finish_time = models.TimeField()
-    parking_zone = models.ForeignKey(CarParkZone, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    finish_time = models.DateTimeField()
+    parking_zone = models.ForeignKey(HeavyParkZone, on_delete=models.CASCADE)
     plate_number = models.CharField(max_length=10)
     phone_number = models.CharField(max_length=16)
     checked_out = models.BooleanField(default=False)

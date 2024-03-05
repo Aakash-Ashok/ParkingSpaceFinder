@@ -60,7 +60,7 @@ class CarParkZoneViewSet(viewsets.ModelViewSet):
     permission_classes = [AdminPermission, IsOwner,permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user.id)
+        serializer.save(owner=self.request.user)
 
     def get_queryset(self):
         user = self.request.user
@@ -74,7 +74,7 @@ class HeavyParkZoneViewSet(viewsets.ModelViewSet):
     permission_classes = [AdminPermission, IsOwner,permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user.id)
+        serializer.save(owner=self.request.user)
 
     def get_queryset(self):
         user = self.request.user
@@ -85,26 +85,29 @@ def create_ticket_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
 
 
-class BikeReservationView(APIView):
+class BaseReservationView(APIView):
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    model = None
+    serializer_class = None
+    park_zone_model = None
 
     def get(self, request):
         try:
-            user_reservation = BikeReservation.objects.get(customer=request.user, checked_out=False)
-            serializer = BikeReservationSerializer(user_reservation)
+            user_reservation = self.model.objects.get(customer=request.user, checked_out=False)
+            serializer = self.serializer_class(user_reservation)
             return Response(serializer.data)
-        except BikeReservation.DoesNotExist:
+        except self.model.DoesNotExist:
             return Response({'message': 'No active reservation found'}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
         try:
-            user_reservation = BikeReservation.objects.get(customer=request.user, checked_out=False)
+            user_reservation = self.model.objects.get(customer=request.user, checked_out=False)
             return Response({'message': 'Please Check Out Your Previous Reservation'}, status=status.HTTP_400_BAD_REQUEST)
-        except BikeReservation.DoesNotExist:
+        except self.model.DoesNotExist:
             pass
 
-        serializer = BikeReservationSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             start_time = serializer.validated_data['start_time']
             end_time = serializer.validated_data['finish_time']
@@ -113,69 +116,12 @@ class BikeReservationView(APIView):
             if start_time >= end_time:
                 return Response({'message': 'End time must be after start time'}, status=status.HTTP_400_BAD_REQUEST)
 
-            parking_zone = get_object_or_404(BikeParkZone, id=parking_zone_id)
+            parking_zone = get_object_or_404(self.park_zone_model, id=parking_zone_id)
             if parking_zone.vacant_slots == 0:
                 return Response({'message': 'Parking Zone Full!'}, status=status.HTTP_400_BAD_REQUEST)
 
             ticket_code = create_ticket_code()
-            while BikeReservation.objects.filter(ticket_code=ticket_code).exists():
-                ticket_code = create_ticket_code()
-
-            total_hours = (end_time - start_time).total_seconds() / 3600
-            total_price = total_hours * float(parking_zone.price)
-
-            with transaction.atomic():
-                reservation = serializer.save(customer=request.user, parking_zone=parking_zone, ticket_code=ticket_code, total_price=total_price)
-                parking_zone.occupied_slots += 1
-                parking_zone.vacant_slots = parking_zone.total_slots - parking_zone.occupied_slots
-                parking_zone.save()
-
-            return Response({'message': 'Successfully Booked', 'total_price': total_price}, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    def delete(self, request):
-        try:
-            user_reservation = BikeReservation.objects.get(customer=request.user, checked_out=False)
-            user_reservation.delete()
-            return Response({'message': 'Reservation deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
-        except BikeReservation.DoesNotExist:
-            return Response({'message': 'No active reservation found'}, status=status.HTTP_404_NOT_FOUND)
-        
-
-class CarReservationView(APIView):
-    authentication_classes = [BasicAuthentication, TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        try:
-            user_reservation = CarReservation.objects.get(customer=request.user, checked_out=False)
-            serializer = CarReservationSerializer(user_reservation)
-            return Response(serializer.data)
-        except CarReservation.DoesNotExist:
-            return Response({'message': 'No active reservation found'}, status=status.HTTP_404_NOT_FOUND)
-
-    def post(self, request):
-        try:
-            user_reservation = CarReservation.objects.get(customer=request.user, checked_out=False)
-            return Response({'message': 'Please Check Out Your Previous Reservation'}, status=status.HTTP_400_BAD_REQUEST)
-        except CarReservation.DoesNotExist:
-            pass
-
-        serializer = CarReservationSerializer(data=request.data)
-        if serializer.is_valid():
-            start_time = serializer.validated_data['start_time']
-            end_time = serializer.validated_data['finish_time']
-            parking_zone_id = serializer.validated_data['parking_zone']
-
-            if start_time >= end_time:
-                return Response({'message': 'End time must be after start time'}, status=status.HTTP_400_BAD_REQUEST)
-
-            parking_zone = get_object_or_404(CarParkZone, id=parking_zone_id)
-            if parking_zone.vacant_slots == 0:
-                return Response({'message': 'Parking Zone Full!'}, status=status.HTTP_400_BAD_REQUEST)
-
-            ticket_code = create_ticket_code()
-            while CarReservation.objects.filter(ticket_code=ticket_code).exists():
+            while self.model.objects.filter(ticket_code=ticket_code).exists():
                 ticket_code = create_ticket_code()
 
             total_hours = (end_time - start_time).total_seconds() / 3600
@@ -193,70 +139,34 @@ class CarReservationView(APIView):
 
     def delete(self, request):
         try:
-            user_reservation = CarReservation.objects.get(customer=request.user, checked_out=False)
-            user_reservation.delete()
-            return Response({'message': 'Reservation deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
-        except CarReservation.DoesNotExist:
-            return Response({'message': 'No active reservation found'}, status=status.HTTP_404_NOT_FOUND)
-
-
-class HeavyReservationView(APIView):
-    authentication_classes = [BasicAuthentication, TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        try:
-            user_reservation = HeavyReservation.objects.get(customer=request.user, checked_out=False)
-            serializer = HeavyReservationSerializer(user_reservation)
-            return Response(serializer.data)
-        except HeavyReservation.DoesNotExist:
-            return Response({'message': 'No active reservation found'}, status=status.HTTP_404_NOT_FOUND)
-
-    def post(self, request):
-        try:
-            user_reservation = HeavyReservation.objects.get(customer=request.user, checked_out=False)
-            return Response({'message': 'Please Check Out Your Previous Reservation'}, status=status.HTTP_400_BAD_REQUEST)
-        except HeavyReservation.DoesNotExist:
-            pass
-
-        serializer = HeavyReservationSerializer(data=request.data)
-        if serializer.is_valid():
-            start_time = serializer.validated_data['start_time']
-            end_time = serializer.validated_data['finish_time']
-            parking_zone_id = serializer.validated_data['parking_zone']
-
-            if start_time >= end_time:
-                return Response({'message': 'End time must be after start time'}, status=status.HTTP_400_BAD_REQUEST)
-
-            parking_zone = get_object_or_404(HeavyParkZone, id=parking_zone_id)
-            if parking_zone.vacant_slots == 0:
-                return Response({'message': 'Parking Zone Full!'}, status=status.HTTP_400_BAD_REQUEST)
-
-            ticket_code = create_ticket_code()
-            while HeavyReservation.objects.filter(ticket_code=ticket_code).exists():
-                ticket_code = create_ticket_code()
-
-            total_hours = (end_time - start_time).total_seconds() / 3600
-            total_price = total_hours * float(parking_zone.price)
-
+            user_reservation = self.model.objects.get(customer=request.user, checked_out=False)
             with transaction.atomic():
-                reservation = serializer.save(customer=request.user, parking_zone=parking_zone, ticket_code=ticket_code, total_price=total_price)
-                parking_zone.occupied_slots += 1
-                parking_zone.vacant_slots = parking_zone.total_slots - parking_zone.occupied_slots
+                parking_zone = user_reservation.parking_zone
+                parking_zone.occupied_slots -= 1
+                parking_zone.vacant_slots += 1
                 parking_zone.save()
-
-            return Response({'message': 'Successfully Booked', 'total_price': total_price}, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request):
-        try:
-            user_reservation = HeavyReservation.objects.get(customer=request.user, checked_out=False)
-            user_reservation.delete()
+                user_reservation.delete()
             return Response({'message': 'Reservation deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
-        except HeavyReservation.DoesNotExist:
+        except self.model.DoesNotExist:
             return Response({'message': 'No active reservation found'}, status=status.HTTP_404_NOT_FOUND)
 
+
+class BikeReservationView(BaseReservationView):
+    model = BikeReservation
+    serializer_class = BikeReservationSerializer
+    park_zone_model = BikeParkZone
+
+
+class CarReservationView(BaseReservationView):
+    model = CarReservation
+    serializer_class = CarReservationSerializer
+    park_zone_model = CarParkZone
+
+
+class HeavyReservationView(BaseReservationView):
+    model = HeavyReservation
+    serializer_class = HeavyReservationSerializer
+    park_zone_model = HeavyParkZone
 
 
 class BikeParkingZoneSearchView(APIView):

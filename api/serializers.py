@@ -40,12 +40,12 @@ class BikeParkZoneSerializer(serializers.ModelSerializer):
 
 class CarParkZoneSerializer(serializers.ModelSerializer):
     class Meta:
-        model=BikeParkZone
+        model=CarParkZone
         exclude=["owner",]
 
 class HeavyParkZoneSerializer(serializers.ModelSerializer):
     class Meta:
-        model=BikeParkZone
+        model=HeavyParkZone
         exclude=["owner",] 
 
 
