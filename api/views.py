@@ -302,6 +302,8 @@ class HeavyParkingZoneSearchView(APIView):
 
 
 class BikeTicketPdfView(APIView):
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
 
     def get(self, request):
         today = timezone.now()
@@ -318,6 +320,8 @@ class BikeTicketPdfView(APIView):
         
 
 class CarTicketPdfView(APIView):
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
 
     def get(self, request):
         today = timezone.now()
@@ -334,6 +338,8 @@ class CarTicketPdfView(APIView):
         
 
 class HeavyTicketPdfView(APIView):
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
 
     def get(self, request):
         today = timezone.now()
@@ -351,6 +357,8 @@ class HeavyTicketPdfView(APIView):
 
 
 class BikeCheckOutView(APIView):
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
         try:
             reservation = BikeReservation.objects.filter(customer=request.user, checked_out=False).first()
@@ -371,6 +379,8 @@ class BikeCheckOutView(APIView):
         
 
 class CarCheckOutView(APIView):
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
         try:
             reservation = CarReservation.objects.filter(customer=request.user, checked_out=False).first()
@@ -391,6 +401,8 @@ class CarCheckOutView(APIView):
         
 
 class HeavyCheckOutView(APIView):
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
         try:
             reservation = HeavyReservation.objects.filter(customer=request.user, checked_out=False).first()
