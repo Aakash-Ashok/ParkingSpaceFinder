@@ -50,6 +50,7 @@ class ParkZone(models.Model):
         return f"{self.name} - {self.get_vehicle_type_display()}"
 
 
+
 class Reservation(models.Model):
     VEHICLE_CHOICES = (
         ('bike', _('Bike')),
@@ -61,7 +62,7 @@ class Reservation(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     finish_time = models.DateTimeField()
-    parking_zone = models.ForeignKey('ParkZone', on_delete=models.CASCADE)
+    parking_zone = models.ForeignKey(ParkZone, on_delete=models.CASCADE)
     plate_number = models.CharField(max_length=10)
     phone_number = models.CharField(max_length=16)
     checked_out = models.BooleanField(default=False)
@@ -74,3 +75,4 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f'Reservation for vehicle: {self.plate_number}'
+    

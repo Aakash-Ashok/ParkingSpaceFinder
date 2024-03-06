@@ -120,8 +120,9 @@ class ReservationView(APIView):
 
 
     def delete(self, request):
+        vehicle_type = request.data.get('vehicle_type')  # Get the selected vehicle type from request data
         try:
-            user_reservation = self.model.objects.get(customer=request.user, checked_out=False)
+            user_reservation = self.model.objects.get(customer=request.user, checked_out=False, parking_zone__vehicle_type=vehicle_type)
             with transaction.atomic():
                 parking_zone = user_reservation.parking_zone
                 parking_zone.occupied_slots -= 1
@@ -130,7 +131,7 @@ class ReservationView(APIView):
                 user_reservation.delete()
             return Response({'message': 'Reservation deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except self.model.DoesNotExist:
-            return Response({'message': 'No active reservation found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': 'No active reservation found for the selected vehicle type'}, status=status.HTTP_404_NOT_FOUND)
         
 class ParkingZoneSearchView(APIView):
     authentication_classes = [BasicAuthentication, TokenAuthentication]
@@ -159,8 +160,9 @@ class TicketPdfView(APIView):
     def get(self, request):
         today = timezone.now()
         vehicle_type = request.GET.get('vehicle_type')
+        print(vehicle_type)
         reservations = Reservation.objects.filter(customer=request.user).filter(Q(checked_out=False) | Q(checked_out=True))
-        if vehicle_type:
+        if vehicle_type is not None:
             reservations = reservations.filter(vehicle_type=vehicle_type)
         if reservations.exists():
             data = {

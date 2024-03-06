@@ -57,7 +57,7 @@ class ReservationSerializer(serializers.ModelSerializer):
     vehicle_type = serializers.ChoiceField(choices=VEHICLE_CHOICES)
     start_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     finish_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    parking_zone = serializers.PrimaryKeyRelatedField(queryset=ParkZone.objects.all())
+    parking_zone = serializers.IntegerField()
     plate_number = serializers.CharField(validators=[RegexValidator(
         regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
         message='Plate number must be in the format KXX123X',
@@ -72,6 +72,7 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         exclude = ['ticket_code', 'customer', 'checked_out']
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
