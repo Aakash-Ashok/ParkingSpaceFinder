@@ -36,10 +36,11 @@ urlpatterns = [
     path("register/user", UserRegistration.as_view(), name='user-register'),
     path("register/admin", AdminRegistration.as_view(), name='admin-register'),
     path('token/', ObtainAuthToken.as_view(), name='api_token_auth'),
-    path('reserve/',ReservationView.as_view(),name='reservation'),
-    path('search/',ParkingZoneSearchView.as_view(),name='search'),
+    path('reserve/<int:pk>/',ReservationView.as_view(),name='reservation'),
+    path('cancel-reservation/<int:pk>/', CancelReservationView.as_view(), name='cancel_reservation'),
+    path('search/',ParkZoneSearchView.as_view(),name='search'),
     path('ticket/',TicketPdfView.as_view(),name='ticket'),
-    path('checkout/', CheckOutView.as_view(), name='bike-checkout'),
+    path('checkout/<int:pk>/', CheckOutView.as_view(), name='checkout'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('',include(router.urls))
 ]

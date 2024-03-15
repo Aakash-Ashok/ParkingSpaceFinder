@@ -17,7 +17,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token c96657d497229907fa8302aa2be9c23f7a0bd202",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -59,13 +59,28 @@
 								},
 								{
 									"key": "location",
-									"value": "JNL",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "vehicle_type",
+									"value": "bike",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "district",
+									"value": "2",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/bike_park_zone/",
+							"raw": "http://127.0.0.1:8000/parkzones/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -75,7 +90,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"bike_park_zone",
+								"parkzones",
 								""
 							]
 						}
@@ -90,7 +105,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token c96657d497229907fa8302aa2be9c23f7a0bd202",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -133,7 +148,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token c96657d497229907fa8302aa2be9c23f7a0bd202",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -150,13 +165,19 @@
 							"formdata": [
 								{
 									"key": "price",
-									"value": "30",
+									"value": "80",
 									"type": "text"
+								},
+								{
+									"key": "vehicle_type",
+									"value": "car",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/bike_park_zone/1/",
+							"raw": "http://127.0.0.1:8000/parkzones/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -166,8 +187,8 @@
 							],
 							"port": "8000",
 							"path": [
-								"bike_park_zone",
-								"1",
+								"parkzones",
+								"2",
 								""
 							]
 						}
@@ -175,14 +196,14 @@
 					"response": []
 				},
 				{
-					"name": "delete_bikeparkzone",
+					"name": "delete_parkzone",
 					"request": {
 						"auth": {
 							"type": "apikey",
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token c96657d497229907fa8302aa2be9c23f7a0bd202",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -195,7 +216,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/bike_park_zone/",
+							"raw": "http://127.0.0.1:8000/parkzones/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -205,7 +226,8 @@
 							],
 							"port": "8000",
 							"path": [
-								"bike_park_zone",
+								"parkzones",
+								"1",
 								""
 							]
 						}
@@ -225,7 +247,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 42d1490a792b40a59b21a7e14844878e6daa74ed",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -237,8 +259,19 @@
 						},
 						"method": "DELETE",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "vehicle_type",
+									"value": "bike",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/reserve/",
+							"raw": "http://127.0.0.1:8000/cancel-reservation/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -248,7 +281,8 @@
 							],
 							"port": "8000",
 							"path": [
-								"reserve",
+								"cancel-reservation",
+								"1",
 								""
 							]
 						}
@@ -263,7 +297,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 42d1490a792b40a59b21a7e14844878e6daa74ed",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -285,13 +319,14 @@
 								},
 								{
 									"key": "finish_time",
-									"value": "2024-03-05T11:00:00",
+									"value": "2024-03-05T12:00:00",
 									"type": "text"
 								},
 								{
-									"key": "parking_zone",
-									"value": "3",
-									"type": "text"
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "plate_number",
@@ -305,13 +340,13 @@
 								},
 								{
 									"key": "vehicle_type",
-									"value": "heavy",
+									"value": "bike",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/reserve/",
+							"raw": "http://127.0.0.1:8000/reserve/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -322,6 +357,7 @@
 							"port": "8000",
 							"path": [
 								"reserve",
+								"2",
 								""
 							]
 						}
@@ -335,13 +371,16 @@
 			"item": [
 				{
 					"name": "search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "apikey",
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 42d1490a792b40a59b21a7e14844878e6daa74ed",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -351,25 +390,35 @@
 								}
 							]
 						},
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "location",
-									"value": "JNL",
+									"key": "vehicle_type",
+									"value": "bike",
 									"type": "text"
 								},
 								{
-									"key": "",
-									"value": "",
+									"key": "state",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "district",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "1",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/search/",
+							"raw": "http://127.0.0.1:8000/search/?state=12&district=2&location=2&vehicle_type=bike",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -381,6 +430,24 @@
 							"path": [
 								"search",
 								""
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "12"
+								},
+								{
+									"key": "district",
+									"value": "2"
+								},
+								{
+									"key": "location",
+									"value": "2"
+								},
+								{
+									"key": "vehicle_type",
+									"value": "bike"
+								}
 							]
 						}
 					},
@@ -399,7 +466,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 42d1490a792b40a59b21a7e14844878e6daa74ed",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
 									"type": "string"
 								},
 								{
@@ -440,8 +507,23 @@
 			"name": "checkout",
 			"item": [
 				{
-					"name": "bike-checkout",
+					"name": "checkout",
 					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -450,7 +532,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/bike/checkout/",
+							"raw": "http://127.0.0.1:8000/checkout/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -460,8 +542,8 @@
 							],
 							"port": "8000",
 							"path": [
-								"bike",
 								"checkout",
+								"2",
 								""
 							]
 						}
@@ -471,7 +553,7 @@
 			]
 		},
 		{
-			"name": "user-registration",
+			"name": "user/admin-registration",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -480,32 +562,32 @@
 					"formdata": [
 						{
 							"key": "first_name",
-							"value": "AK",
+							"value": "admin",
 							"type": "text"
 						},
 						{
 							"key": "last_name",
-							"value": "1",
+							"value": "admin",
 							"type": "text"
 						},
 						{
 							"key": "email",
-							"value": "AK1@gmail.com",
+							"value": "admin@gmail.com",
 							"type": "text"
 						},
 						{
 							"key": "username",
-							"value": "AK2",
+							"value": "admin",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "AK2@123",
+							"value": "admin",
 							"type": "text"
 						},
 						{
 							"key": "dob",
-							"value": "16-08-2002",
+							"value": "06-07-2001",
 							"type": "text"
 						},
 						{
@@ -520,7 +602,7 @@
 						},
 						{
 							"key": "phone_number",
-							"value": "9656767117",
+							"value": "7894561230",
 							"type": "text"
 						}
 					]
@@ -544,7 +626,7 @@
 			"response": []
 		},
 		{
-			"name": "Token/admin1",
+			"name": "Token/admin",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -553,12 +635,12 @@
 					"formdata": [
 						{
 							"key": "username",
-							"value": "Admin1",
+							"value": "admin",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "Admin1@123",
+							"value": "admin",
 							"type": "text"
 						}
 					]
@@ -582,7 +664,7 @@
 			"response": []
 		},
 		{
-			"name": "token/user1",
+			"name": "token/user",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -591,12 +673,12 @@
 					"formdata": [
 						{
 							"key": "username",
-							"value": "AK2",
+							"value": "Akask",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "AK2@123",
+							"value": "Akask@123",
 							"type": "text"
 						}
 					]
@@ -627,7 +709,7 @@
 					"apikey": [
 						{
 							"key": "value",
-							"value": "Token 42d1490a792b40a59b21a7e14844878e6daa74ed",
+							"value": "Token 7b4c202563e6648a46e5e8ebe71e8c280d0cb46e",
 							"type": "string"
 						},
 						{
@@ -644,17 +726,17 @@
 					"formdata": [
 						{
 							"key": "old_password",
-							"value": "AK2@123",
+							"value": "akash1",
 							"type": "text"
 						},
 						{
 							"key": "new_password",
-							"value": "AK22@123",
+							"value": "akash",
 							"type": "text"
 						},
 						{
 							"key": "confirm_password",
-							"value": "AK22@123",
+							"value": "akash",
 							"type": "text"
 						}
 					]

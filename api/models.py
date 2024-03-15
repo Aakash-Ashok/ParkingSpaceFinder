@@ -30,6 +30,26 @@ class User(AbstractUser):
 
 
 
+class State(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class District(models.Model):
+    name = models.CharField(max_length=100)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name}, {self.state}"
+
+class Location(models.Model):
+    name = models.CharField(max_length=100)
+    district = models.ForeignKey(District, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name}, {self.district}"
+
 class ParkZone(models.Model):
     VEHICLE_CHOICES = (
         ('bike', 'Bike'),
@@ -43,11 +63,13 @@ class ParkZone(models.Model):
     vacant_slots = models.PositiveIntegerField(default=0)
     occupied_slots = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    location = models.CharField(max_length=100)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    district = models.ForeignKey(District, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
     vehicle_type = models.CharField(max_length=10, choices=VEHICLE_CHOICES)
 
     def __str__(self):
-        return f"{self.name} - {self.get_vehicle_type_display()}"
+        return f"{self.name} - {self.get_vehicle_type_display()},{self.location}, {self.district}, {self.state}"
 
 
 
@@ -76,3 +98,5 @@ class Reservation(models.Model):
     def __str__(self):
         return f'Reservation for vehicle: {self.plate_number}'
     
+
+

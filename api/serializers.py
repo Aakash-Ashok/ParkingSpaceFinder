@@ -2,6 +2,7 @@ from rest_framework import serializers
 from datetime import datetime
 from api.models import *
 from django.core.validators import RegexValidator
+from django.shortcuts import get_object_or_404
 
 class CustomDateFormatField(serializers.DateField):
     def to_internal_value(self, value):
@@ -40,11 +41,15 @@ class ParkZoneSerializer(serializers.ModelSerializer):
         ('heavy', 'Heavy Vehicle')
     )
 
+    state = serializers.CharField(source='state_id')
+    district = serializers.CharField(source='district_id')
+    location = serializers.CharField(source='location_id')
     vehicle_type = serializers.ChoiceField(choices=VEHICLE_CHOICES)
 
     class Meta:
         model = ParkZone
         exclude = ["owner",]
+
 
 
 class ReservationSerializer(serializers.ModelSerializer):
@@ -57,7 +62,7 @@ class ReservationSerializer(serializers.ModelSerializer):
     vehicle_type = serializers.ChoiceField(choices=VEHICLE_CHOICES)
     start_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     finish_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    parking_zone = serializers.IntegerField()
+    # parking_zone = serializers.PrimaryKeyRelatedField(queryset=ParkZone.objects.all(), write_only=True)
     plate_number = serializers.CharField(validators=[RegexValidator(
         regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', 
         message='Plate number must be in the format KXX123X',
@@ -71,7 +76,9 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        exclude = ['ticket_code', 'customer', 'checked_out']
+        exclude = ['ticket_code', 'customer', 'checked_out','parking_zone']
+
+    
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -87,4 +94,4 @@ class ChangePasswordSerializer(serializers.Serializer):
 class ParkZoneSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = ParkZone
-        fields = ['name','price','location', 'vehicle_type']
+        fields = ['name', 'price', 'location', 'vehicle_type', 'district', 'state']
