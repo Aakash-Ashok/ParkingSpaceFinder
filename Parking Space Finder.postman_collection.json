@@ -34,7 +34,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "bikezone",
+									"value": "heavyz",
 									"type": "text"
 								},
 								{
@@ -64,7 +64,7 @@
 								},
 								{
 									"key": "vehicle_type",
-									"value": "bike",
+									"value": "heavy",
 									"type": "text"
 								},
 								{
@@ -247,7 +247,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
+									"value": "Token b5a8b953e75a84b5474b93b7c6f029fac65f8659",
 									"type": "string"
 								},
 								{
@@ -271,7 +271,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/cancel-reservation/1/",
+							"raw": "http://127.0.0.1:8000/cancel-reservation/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -282,7 +282,7 @@
 							"port": "8000",
 							"path": [
 								"cancel-reservation",
-								"1",
+								"2",
 								""
 							]
 						}
@@ -297,7 +297,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
+									"value": "Token b5a8b953e75a84b5474b93b7c6f029fac65f8659",
 									"type": "string"
 								},
 								{
@@ -380,7 +380,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
+									"value": "Token b5a8b953e75a84b5474b93b7c6f029fac65f8659",
 									"type": "string"
 								},
 								{
@@ -466,7 +466,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
+									"value": "Token b5a8b953e75a84b5474b93b7c6f029fac65f8659",
 									"type": "string"
 								},
 								{
@@ -514,7 +514,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
+									"value": "Token b5a8b953e75a84b5474b93b7c6f029fac65f8659",
 									"type": "string"
 								},
 								{

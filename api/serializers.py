@@ -15,7 +15,7 @@ class CustomDateFormatField(serializers.DateField):
 class AdminSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name","last_name","email","username","password","dob","gender","address","phone_number","profile_image","is_staff"]
+        fields = ["first_name", "last_name", "email", "username", "password", "dob", "gender", "address", "phone_number", "profile_image"]
 
     def create(self, validated_data):
         validated_data["is_staff"] = True
@@ -23,16 +23,16 @@ class AdminSerializers(serializers.ModelSerializer):
         return user
 
 
+
 class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name","last_name","email","username","password","dob","gender","address","phone_number","profile_image","is_staff"]
+        fields = ["first_name", "last_name", "email", "username", "password", "dob", "gender", "address", "phone_number", "profile_image"]
 
     def create(self, validated_data):
-        validated_data["is_staff"] = False
         user = User.objects.create_user(**validated_data)
         return user
-    
+
 
 class ParkZoneSerializer(serializers.ModelSerializer):
     VEHICLE_CHOICES = (
