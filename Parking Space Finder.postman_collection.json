@@ -233,6 +233,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "User-update-profile",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -754,6 +762,47 @@
 					"path": [
 						"change-password",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user-UpdateProfile",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "ak@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/profile/3/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"profile",
+						"3",
+						""
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": null,
+							"disabled": true
+						}
 					]
 				}
 			},

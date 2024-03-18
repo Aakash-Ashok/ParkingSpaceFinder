@@ -35,6 +35,8 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path("register/user", UserRegistration.as_view(), name='user-register'),
     path("register/admin", AdminRegistration.as_view(), name='admin-register'),
+    path('profile/<int:pk>/', UserUpdateProfile.as_view(), name='user-update_profile'),
+    path('profile/<int:pk>/', AdminUpdateProfile.as_view(), name='admin-update_profile'),
     path('token/', ObtainAuthToken.as_view(), name='api_token_auth'),
     path('reserve/<int:pk>/',ReservationView.as_view(),name='reservation'),
     path('cancel-reservation/<int:pk>/', CancelReservationView.as_view(), name='cancel_reservation'),

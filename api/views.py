@@ -35,6 +35,55 @@ class AdminRegistration(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+class UserUpdateProfile(APIView):
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk, format=None):
+        profile = self.get_object(pk)
+        serializer = UserSerializers(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk, format=None):
+        profile = self.get_object(pk)
+        serializer = UserSerializers(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AdminUpdateProfile(APIView):
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk, format=None):
+        profile = self.get_object(pk)
+        serializer = AdminSerializers(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk, format=None):
+        profile = self.get_object(pk)
+        serializer = AdminSerializers(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ParkZoneViewSet(viewsets.ModelViewSet):
     queryset = ParkZone.objects.all()
     serializer_class = ParkZoneSerializer
