@@ -44,6 +44,7 @@ urlpatterns = [
     path('ticket/',TicketPdfView.as_view(),name='ticket'),
     path('checkout/<int:pk>/', CheckOutView.as_view(), name='checkout'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('parkzones/<int:pk>/reservations/', CurrentDayParkZoneReservationsAPIView.as_view(), name='list-reservations'),
     path('',include(router.urls))
 ]
 

@@ -322,12 +322,12 @@
 							"formdata": [
 								{
 									"key": "start_time",
-									"value": "2024-03-05T09:00:00",
+									"value": "2024-03-21T09:00:00",
 									"type": "text"
 								},
 								{
 									"key": "finish_time",
-									"value": "2024-03-05T12:00:00",
+									"value": "2024-03-21T12:00:00",
 									"type": "text"
 								},
 								{
@@ -803,6 +803,46 @@
 							"value": null,
 							"disabled": true
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-view reservation",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "Token 9ad7152ec0e28910f7b959f8210cf5fefff9669f",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/parkzones/2/reservations/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"parkzones",
+						"2",
+						"reservations",
+						""
 					]
 				}
 			},

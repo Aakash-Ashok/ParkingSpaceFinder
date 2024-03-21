@@ -136,6 +136,9 @@ class ReservationView(APIView):
             if start_time >= end_time:
                 return Response({'message': 'End time must be after start time'}, status=status.HTTP_400_BAD_REQUEST)
 
+            if start_time <= timezone.now():
+                return Response({'message': 'Reservation start time must be in the future'}, status=status.HTTP_400_BAD_REQUEST)
+
             parking_zone = get_object_or_404(ParkZone, id=parking_zone_id)
             if parking_zone.vacant_slots == 0:
                 return Response({'message': 'Parking Zone Full!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -161,7 +164,7 @@ class ReservationView(APIView):
             return Response({'message': 'Successfully Booked', 'total_price': total_price}, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 
 class CancelReservationView(APIView):
     authentication_classes = [BasicAuthentication, TokenAuthentication]
@@ -216,8 +219,7 @@ class TicketPdfView(APIView):
     def get(self, request):
         today = timezone.now()
         vehicle_type = request.GET.get('vehicle_type')
-        print(vehicle_type)
-        reservations = Reservation.objects.filter(customer=request.user).filter(Q(checked_out=False) | Q(checked_out=True))
+        reservations = Reservation.objects.filter(customer=request.user, checked_out=False)
         if vehicle_type is not None:
             reservations = reservations.filter(vehicle_type=vehicle_type)
         if reservations.exists():
@@ -227,8 +229,9 @@ class TicketPdfView(APIView):
             }
             return Response(data)
         else:
-            message = f'No Parking reservations exist for {request.user}'
+            message = f'No active parking reservations exist for {request.user}'
             return Response({'message': message}, status=status.HTTP_404_NOT_FOUND)
+        
 
 class CheckOutView(APIView):
     authentication_classes = [BasicAuthentication, TokenAuthentication]
@@ -262,5 +265,22 @@ class ChangePasswordView(APIView):
             return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
+class CurrentDayParkZoneReservationsAPIView(APIView):
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, pk):
+        owner = request.user
+        current_date = datetime.now().date()
+        park_zone = get_object_or_404(ParkZone, pk=pk, owner=owner)
+        reservations = Reservation.objects.filter(parking_zone=park_zone, start_time__date=current_date)
+        serializer = ReservationSerializer(reservations, many=True)
+        return Response(serializer.data)
+
+
+
+
+
+
 
 #######################################
